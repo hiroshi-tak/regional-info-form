@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { apiFetch } from "@/lib/api";
 
 export default function Login() {
     const router = useRouter();
@@ -18,8 +19,7 @@ export default function Login() {
                 return;
             }
 
-            const res = await fetch(
-                "https://j2pe3bi435.execute-api.ap-northeast-1.amazonaws.com/dev/auth/login",
+            const res = await apiFetch("/auth/login",
                 {
                     method: "POST",
                     headers: {

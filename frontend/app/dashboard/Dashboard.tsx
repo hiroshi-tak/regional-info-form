@@ -3,9 +3,6 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from "@/lib/api";
 
-const API_BASE =
-    'https://j2pe3bi435.execute-api.ap-northeast-1.amazonaws.com/dev';
-
 export default function DashboardPage() {
     const [weather, setWeather] = useState<any>(null);
     const [disaster, setDisaster] = useState<any>(null);
@@ -16,9 +13,9 @@ export default function DashboardPage() {
 
             const [weatherRes, disasterRes, newsRes] =
                 await Promise.all([
-                    apiFetch(`${API_BASE}/my-weather`),
-                    apiFetch(`${API_BASE}/disaster`),
-                    apiFetch(`${API_BASE}/news`),
+                    apiFetch("/my-weather"),
+                    apiFetch("/disaster"),
+                    apiFetch("/news"),
                 ]);
 
             const weatherData = await weatherRes.json();

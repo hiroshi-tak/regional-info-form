@@ -1,7 +1,9 @@
 
 import { isTokenExpired } from "./auth";
 
-export async function apiFetch(url: string, options: RequestInit = {}) {
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+
+export async function apiFetch(path: string, options: RequestInit = {}) {
     const token = localStorage.getItem("token");
 
     // 期限切れチェック
@@ -11,7 +13,7 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
         throw new Error("token expired");
     }
 
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE}${path}`, {
         ...options,
         headers: {
             "Content-Type": "application/json",
@@ -30,20 +32,3 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
     return res;
 }
 
-/*
-export async function apiFetch(
-    url: string,
-    options: RequestInit = {}
-) {
-    const token = localStorage.getItem("token");
-
-    return fetch(url, {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            ...(options.headers || {})
-        }
-    });
-}
-*/

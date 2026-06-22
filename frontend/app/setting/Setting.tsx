@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { REGIONS } from "../../lib/cities";
 import { jwtDecode } from "jwt-decode";
 
+import { apiFetch } from "@/lib/api";
 
 export default function Setting() {
     const [regionName, setRegionName] = useState("");
@@ -46,8 +47,8 @@ export default function Setting() {
             areaCode: region.code
         };
 
-        const res = await fetch(
-            "https://j2pe3bi435.execute-api.ap-northeast-1.amazonaws.com/dev/regions",
+        
+        const res = await apiFetch("/regions", 
             {
                 method: "POST",
                 headers: {

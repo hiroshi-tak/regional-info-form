@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
 
+import { apiFetch } from "@/lib/api";
+
 export default function Register() {
     const router = useRouter();
 
@@ -17,8 +19,7 @@ export default function Register() {
             return;
         }
         
-        const res = await fetch(
-            "https://j2pe3bi435.execute-api.ap-northeast-1.amazonaws.com/dev/auth/register",
+        const res = await apiFetch("/auth/register",
             {
                 method: "POST",
                 headers: {

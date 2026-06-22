@@ -56,27 +56,34 @@ npm install -g serverless
 ```
 
 ### セットアップ
-1. git clone <repository>
-2. cd regional-info-form
-3. cp .env.example .env
+* git clone <repository>
+* cd regional-info-form
+
+### バックエンド
+1. cd backend <br>
+   cp .env.example .env
    * JWT_SECRETとWEATHER_KEYを設定
-4. DynamoDB tables作成
+2. DynamoDB tables作成(awsコンソール)
 
 - Users
-  - Partition Key
-     - userId (String)
-   - Global Secondary Index
-     - username-index
-     - username (String)
-
-- UserRegion
    - Partition Key
+      - userId (String)
+   - Global Secondary Index
+      - index名: username-index
+      - partition key: username (String)
+- UserRegion
+  -  Partition Key
      - userId (String)
 
-5. backend/npm install
-6. backend/serverless deploy
-7. frontend/npm install
-8. frontend/npm run dev
+3. npm install
+4. serverless deploy
+
+### フロントエンド
+1. npm install
+2. touch .env.local
+   * AWS API Gateway のステージURLを設定
+   * 設定：NEXT_PUBLIC_API_BASE=https://xxxxx.execute-api.ap-northeast-1.amazonaws.com/dev
+3. npm run dev
 
 ## URL
 * http://localhost:3000
