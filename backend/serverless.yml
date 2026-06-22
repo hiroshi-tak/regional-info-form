@@ -1,0 +1,83 @@
+service: regional-info-api
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-northeast-1
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Scan
+            - dynamodb:Query
+          Resource:
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/UserRegion
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/Users
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/Users/index/*
+
+  environment:
+    WEATHER_KEY: ${env:WEATHER_KEY}
+    JWT_SECRET: ${env:JWT_SECRET}
+
+functions:
+  register:
+    handler: auth/register.register
+    events:
+      - http:
+          path: auth/register
+          method: post
+          cors: true
+
+  login:
+    handler: auth/login.login
+    events:
+      - http:
+          path: auth/login
+          method: post
+          cors: true
+
+  registerRegion:
+    handler: handlers/regionHandler.registerRegion
+    events:
+      - http:
+          path: regions
+          method: post
+          cors: true
+
+  getRegion:
+    handler: handlers/regionHandler.getRegion
+    events:
+      - http:
+          path: regions/me
+          method: get
+          cors: true
+
+  myWeather:
+    handler: handlers/weatherHandler.myWeather
+    events:
+      - http:
+          path: my-weather
+          method: get
+          cors: true
+
+  disaster:
+    handler: handlers/disasterHandler.disaster
+    events:
+      - http:
+          path: disaster
+          method: get
+          cors: true
+
+  news:
+    handler: handlers/newsHandler.news
+    events:
+      - http:
+          path: news
+          method: get
+          cors: true
