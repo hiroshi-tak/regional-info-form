@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect } from 'react';
 import AuthGuard from "@/components/AuthGuard";
 
-
+/*
 export default function Home() {
 
   useEffect(() => {
@@ -27,4 +27,9 @@ export default function Home() {
       </div>
     </AuthGuard>
   );
+}
+*/
+
+export default function Home() {
+  return <div>HOME OK</div>;
 }
