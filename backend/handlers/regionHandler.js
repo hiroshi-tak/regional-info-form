@@ -7,6 +7,8 @@ const { errorResponse } = require("../utils/error");
 
 const { verifyToken } = require("../auth/authMiddleware");
 
+const USER_REGION_TABLE = process.env.USER_REGION_TABLE;
+
 module.exports.registerRegion = async (event) => {
     if (event.httpMethod === "OPTIONS") {
         return options();
@@ -26,7 +28,7 @@ module.exports.registerRegion = async (event) => {
         };
 
         await dynamo.put({
-            TableName: "UserRegion",
+            TableName: USER_REGION_TABLE,
             Item: item
         }).promise();
 
@@ -42,7 +44,7 @@ module.exports.getRegion = async (event) => {
         const user = verifyToken(event);
 
         const result = await dynamo.get({
-            TableName: "UserRegion",
+            TableName: USER_REGION_TABLE,
             Key: {
                 userId: user.userId
             }

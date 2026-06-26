@@ -7,6 +7,8 @@ const { ApiError, errorResponse } = require("../utils/error");
 
 const { verifyToken } = require("../auth/authMiddleware");
 
+const USER_REGION_TABLE = process.env.USER_REGION_TABLE;
+
 module.exports.myWeather = async (event) => {
     if (event.httpMethod === "OPTIONS") {
         return options();
@@ -17,7 +19,7 @@ module.exports.myWeather = async (event) => {
         const user = verifyToken(event);
 
         const region = await dynamo.get({
-            TableName: "UserRegion",
+            TableName: USER_REGION_TABLE,
             Key: {
                 userId: user.userId
             }

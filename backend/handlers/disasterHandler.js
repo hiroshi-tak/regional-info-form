@@ -10,6 +10,8 @@ const { verifyToken } = require("../auth/authMiddleware");
 const padAreaCode = (code) =>
     String(code).padStart(6, "0");
 
+const USER_REGION_TABLE = process.env.USER_REGION_TABLE;
+
 module.exports.disaster = async (event) => {
     if (event.httpMethod === "OPTIONS") {
         return options();
@@ -20,7 +22,7 @@ module.exports.disaster = async (event) => {
         const user = verifyToken(event);
 
         const result = await dynamo.get({
-            TableName: "UserRegion",
+            TableName: USER_REGION_TABLE,
             Key: {
                 userId: user.userId
             }

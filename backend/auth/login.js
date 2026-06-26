@@ -7,6 +7,8 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 const { success, options } = require("../utils/response");
 const { ApiError, errorResponse } = require("../utils/error");
 
+const USER_TABLE = process.env.USER_TABLE;
+
 module.exports.login = async (event) => {
     if (event.httpMethod === "OPTIONS") {
         return options();
@@ -16,7 +18,7 @@ module.exports.login = async (event) => {
         const { username, password } = JSON.parse(event.body);
 
         const result = await dynamo.query({
-            TableName: "Users",
+            TableName: USER_TABLE,
             IndexName: "username-index",
             KeyConditionExpression: "username = :u",
             ExpressionAttributeValues: {

@@ -24,6 +24,8 @@ provider:
   environment:
     WEATHER_KEY: ${env:WEATHER_KEY}
     JWT_SECRET: ${env:JWT_SECRET}
+    USER_REGION_TABLE: UserRegion
+    USER_TABLE: Users
 
 functions:
   register:

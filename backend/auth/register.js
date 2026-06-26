@@ -7,6 +7,8 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 const { success, options } = require("../utils/response");
 const { ApiError, errorResponse } = require("../utils/error");
 
+const USER_TABLE = process.env.USER_TABLE;
+
 module.exports.register = async (event) => {
     if (event.httpMethod === "OPTIONS") {
         return options();
@@ -22,7 +24,7 @@ module.exports.register = async (event) => {
         }
 
         const existing = await dynamo.query({
-            TableName: "Users",
+            TableName: USER_TABLE,
             IndexName: "username-index",
             KeyConditionExpression: "username = :u",
             ExpressionAttributeValues: {
@@ -46,7 +48,7 @@ module.exports.register = async (event) => {
         };
 
         await dynamo.put({
-            TableName: "Users",
+            TableName: USER_TABLE,
             Item: user
         }).promise();
 

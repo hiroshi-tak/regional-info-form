@@ -9,6 +9,8 @@ const { ApiError, errorResponse } = require("../utils/error");
 
 const { verifyToken } = require("../auth/authMiddleware");
 
+const USER_REGION_TABLE = process.env.USER_REGION_TABLE;
+
 // ===== normalize =====
 const normalize = (title) => {
     return title
@@ -65,7 +67,7 @@ module.exports.news = async (event) => {
         const userId = user.userId;
 
         const result = await dynamo.get({
-            TableName: "UserRegion",
+            TableName: USER_REGION_TABLE,
             Key: { userId }
         }).promise();
 
