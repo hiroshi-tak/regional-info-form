@@ -222,17 +222,172 @@ sequenceDiagram
 
 ## API仕様
 
-| Method | Path           | 説明       |
-| ------ | -------------- | -------- |
-| POST   | /auth/register | ユーザー登録   |
-| POST   | /auth/login    | ログイン     |
-| POST   | /regions       | 地域登録     |
-| GET    | /regions/me    | 地域情報取得 |
-| GET    | /my-weather    | 天気情報取得   |
-| GET    | /disaster      | 災害情報取得   |
-| GET    | /news          | 地域ニュース取得 |
+| Method | Path           | 説明            |認証               |
+| ------ | -------------- | -------------- | ------------------ |
+| POST   | /auth/register | ユーザー登録    | 不要                |
+| POST   | /auth/login    | ログイン        | 不要                |
+| POST   | /regions       | 地域登録        | 必要 (Bearer Token) |
+| GET    | /regions/me    | 地域情報取得    | 必要 (Bearer Token) |
+| GET    | /my-weather    | 天気情報取得    | 必要 (Bearer Token) |
+| GET    | /disaster      | 災害情報取得    | 必要 (Bearer Token) |
+| GET    | /news          | 地域ニュース取得 | 必要 (Bearer Token) |
+
+### API利用手順
+
+1. `POST /auth/register` でユーザー登録
+2. `POST /auth/login` でJWTを取得
+3. 認証が必要なAPIでは以下のヘッダーを付与
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
 
 
+### POST /auth/register
 
+**Request Body**
 
+```json
+{
+  "username": "test",
+  "password": "12345678"
+}
+```
 
+**Response(201 Created)**
+
+```json
+{
+  "message": "user created",
+  "userId": "f92fabc4-89c4-4b6b-bddd-f4d671d71c1f"
+}
+```
+
+### POST /auth/login
+
+**Request Body**
+
+```json
+{
+  "username": "test",
+  "password": "12345678"
+}
+```
+
+**Response(200 OK)**
+
+```json
+{
+  "token": "...",
+  "userId": "f92fabc4-89c4-4b6b-bddd-f4d671d71c1f",
+  "username": "test"
+}
+```
+
+### POST /regions
+
+**Authorization**
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Request Body**
+
+```json
+{
+    "city": "大府市",
+    "lat": 35.015,
+    "lon": 136.963,
+    "areaCode": "230000"
+}
+```
+
+**Response(200 OK)**
+
+```json
+{
+    "message": "saved"
+}
+```
+
+### GET /regions/me
+
+**Authorization**
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Response(200 OK)**
+
+```json
+{
+    "lon": 136.963,
+    "city": "大府市",
+    "lat": 35.015,
+    "areaCode": "23223",
+    "userId": "f92fabc4-89c4-4b6b-bddd-f4d671d71c1f"
+}
+```
+
+### GET /my-weather
+
+**Authorization**
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Response(200 OK)**
+
+```json
+{
+    "city": "大府市",
+    "weather": "Rain",
+    "description": "強い雨",
+    "temp": 23.28,
+    "humidity": 92
+}
+```
+
+### GET /disaster
+
+**Authorization**
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Response(200 OK)**
+
+```json
+{
+    "city": "大府市",
+    "headline": "愛知県では、２８日夜遅くまで濃霧による視程障害に注意してください。"
+}
+```
+
+### GET /news
+
+**Authorization**
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Response(200 OK)**
+
+```json
+{
+    "city": "大府市",
+    "news": [
+        {
+            "title": "...",
+            "link": "...",
+            "date": "...",
+            "score": 10
+        }
+    ]
+}
+```

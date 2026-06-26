@@ -13,10 +13,12 @@ module.exports.registerRegion = async (event) => {
     }
     
     try {
+        const user = verifyToken(event);
+
         const body = JSON.parse(event.body);
 
         const item = {
-            userId: body.userId,
+            userId: user.userId,
             city: body.city,
             lat: body.lat,
             lon: body.lon,

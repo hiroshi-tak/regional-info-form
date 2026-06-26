@@ -3,28 +3,58 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from "@/lib/api";
 
+import { useRouter } from "next/navigation";
+
+
 export default function DashboardPage() {
+    const router = useRouter();
     const [weather, setWeather] = useState<any>(null);
     const [disaster, setDisaster] = useState<any>(null);
     const [news, setNews] = useState<any>(null);
 
     useEffect(() => {
         const load = async () => {
+            try {
+                const [weatherRes, disasterRes, newsRes] =
+                    await Promise.all([
+                        apiFetch("/my-weather"),
+                        apiFetch("/disaster"),
+                        apiFetch("/news"),
+                    ]);
+                
+                if (
+                    weatherRes.status === 404 ||
+                    disasterRes.status === 404 ||
+                    newsRes.status === 404
+                ) {
+                    router.push("/setting");
+                    return;
+                }
+                
+                if (!weatherRes.ok || !disasterRes.ok || !newsRes.ok) {
+                    throw new Error("API Error");
+                }
 
-            const [weatherRes, disasterRes, newsRes] =
-                await Promise.all([
-                    apiFetch("/my-weather"),
-                    apiFetch("/disaster"),
-                    apiFetch("/news"),
-                ]);
+                const [weatherData, disasterData, newsData] =
+                    await Promise.all([
+                        weatherRes.json(),
+                        disasterRes.json(),
+                        newsRes.json(),
+                    ]);
 
-            const weatherData = await weatherRes.json();
-            const disasterData = await disasterRes.json();
-            const newsData = await newsRes.json();
+                setWeather(weatherData);
+                setDisaster(disasterData);
+                setNews(newsData);
 
-            setWeather(weatherData);
-            setDisaster(disasterData);
-            setNews(newsData);
+            } catch (err) {
+                console.error(err);
+
+                if (err) {
+                    alert("情報の取得に失敗しました");
+                } else {
+                    alert("通信エラーが発生しました");
+                }
+            }
         };
 
         load();

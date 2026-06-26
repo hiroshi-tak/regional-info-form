@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { REGIONS } from "../../lib/cities";
 import { jwtDecode } from "jwt-decode";
-
 import { apiFetch } from "@/lib/api";
 
 export default function Setting() {
@@ -29,45 +28,40 @@ export default function Setting() {
     }, [cities, cityName]);
 
     const handleSubmit = async () => {
-        if (!region || !selectedCity) {
-            alert("地域と市を選択してください");
-            return;
-        }
-
-        if (!userId) {
-            alert("ログインしてください");
-            return;
-        }
-
-        const payload = {
-            userId,
-            city: selectedCity.name,
-            lat: selectedCity.lat,
-            lon: selectedCity.lon,
-            areaCode: region.code
-        };
-
-        
-        const res = await apiFetch("/regions", 
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
+        try {
+            if (!region || !selectedCity) {
+                alert("地域と市を選択してください");
+                return;
             }
-        );
 
-        const data = await res.json();
+            const payload = {
+                city: selectedCity.name,
+                lat: selectedCity.lat,
+                lon: selectedCity.lon,
+                areaCode: region.code
+            };
 
-        if (!res.ok) {
-            alert("登録失敗");
-            console.error(data);
-            return;
+            const res = await apiFetch("/regions",
+                {
+                    method: "POST",
+                    body: JSON.stringify(payload),
+                }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert("登録失敗");
+                console.error(data);
+                return;
+            }
+
+            alert("登録完了");
+            console.log(data);
+        } catch (err) {
+            console.error(err);
+            alert("通信エラーが発生しました");
         }
-
-        alert("登録完了");
-        console.log(data);
     };
 
     return (
