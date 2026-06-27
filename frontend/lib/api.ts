@@ -23,7 +23,7 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     });
 
     // サーバ側の401も処理
-    if (res.status === 401) {
+    if (res.status === 401 && path !== "/auth/login") {
         localStorage.removeItem("token");
         window.location.href = "/auth/login";
         throw new Error("unauthorized");

@@ -33,7 +33,11 @@ export default function Login() {
             );
 
             if (!res.ok) {
-                alert("ログイン失敗");
+                if (res.status === 401) {
+                    alert("ユーザー名またはパスワードが違います");
+                } else {
+                    alert("ログインに失敗しました");
+                }
                 return;
             }
 
@@ -44,6 +48,7 @@ export default function Login() {
             router.push('/')
         } catch (err) {
             console.error(err);
+            alert("サーバーエラーが発生しました");
         }
     };
 
